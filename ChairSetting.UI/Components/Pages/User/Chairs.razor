@@ -1,0 +1,158 @@
+﻿@* @page "/user/chairs"
+@rendermode InteractiveServer
+
+@using ChairSetting.UI.Models
+@using ChairSetting.UI.Services
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@inject ChairService ChairService
+@inject AuthenticationStateProvider AuthStateProvider
+
+<h3>Available Chairs</h3>
+
+<table>
+    @foreach (var chair in chairs)
+    {
+        <tr>
+            <td>@chair.ChairNumber</td>
+            <td>@chair.IsOccupied</td>
+            <td>
+                @if (!chair.IsOccupied)
+                {
+                    <button @onclick="() => Occupy(chair.Id)">Occupy</button>
+                }
+                else if (chair.OccupiedByUsername == CurrentUser)
+                {
+                    <button @onclick="() => Release(chair.Id)">Release</button>
+                }
+            </td>
+        </tr>
+    }
+</table>
+
+@code {
+    List<ChairResponseDto> chairs = new();
+    string CurrentUser;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        CurrentUser = authState.User.Identity?.Name;
+
+        chairs = await ChairService.GetAll();
+    }
+
+    async Task Occupy(int id)
+    {
+        await ChairService.Occupy(id);
+        chairs = await ChairService.GetAll();
+    }
+
+    async Task Release(int id)
+    {
+        await ChairService.Release(id);
+        chairs = await ChairService.GetAll();
+    }
+} *@
+@page "/user/chairs"
+@rendermode InteractiveServer
+
+@using ChairSetting.UI.Models
+@using ChairSetting.UI.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@inject ChairService ChairService
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IJSRuntime JS
+
+<h3 class="mb-3">Available Chairs</h3>
+
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Chair</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var chair in chairs)
+        {
+            <tr>
+                <td>@chair.ChairNumber</td>
+
+                <td>
+                    @if (chair.IsOccupied)
+                    {
+                        <span class="badge bg-danger">Occupied</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success">Available</span>
+                    }
+                </td>
+
+                <td>
+                    @if (!chair.IsOccupied)
+                    {
+                        <button class="btn btn-sm btn-success"
+                                @onclick="() => Occupy(chair.Id)">
+                            Occupy
+                        </button>
+                    }
+                    else if (chair.OccupiedByUsername == CurrentUser)
+                    {
+                        <button class="btn btn-sm btn-warning"
+                                @onclick="() => ConfirmRelease(chair.Id)">
+                            Release
+                        </button>
+                    }
+                    else
+                    {
+                        <span class="text-muted">In use</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    List<ChairResponseDto> chairs = new();
+    string CurrentUser;
+    bool _loaded;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender || _loaded)
+            return;
+
+        _loaded = true;
+
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        CurrentUser = authState.User.Identity?.Name;
+
+        chairs = await ChairService.GetAll();
+
+        StateHasChanged();
+    }
+
+    async Task Occupy(int id)
+    {
+        await ChairService.Occupy(id);
+        await JS.InvokeVoidAsync("showToast", "Chair occupied successfully", "success");
+        chairs = await ChairService.GetAll();
+    }
+
+    async Task ConfirmRelease(int id)
+    {
+        var confirm = await JS.InvokeAsync<bool>("showConfirmRelease");
+
+        if (!confirm)
+            return;
+
+        await ChairService.Release(id);
+        await JS.InvokeVoidAsync("showToast", "Chair released successfully", "success");
+        chairs = await ChairService.GetAll();
+    }
+}

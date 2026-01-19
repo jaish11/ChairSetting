@@ -1,0 +1,69 @@
+﻿@* @page "/signup"
+
+@using ChairSetting.UI.Models
+@using ChairSetting.UI.Services
+@inject AuthService Auth
+@inject NavigationManager Nav
+
+<h3>Signup</h3>
+
+<input @bind="model.Username" placeholder="Username" />
+<input type="password" @bind="model.Password" placeholder="Password" />
+
+<button @onclick="OnSignup">Signup</button>
+
+@code {
+    SignupDto model = new();
+
+    async Task OnSignup()
+    {
+        await Auth.Signup(model);
+        Nav.NavigateTo("/login");
+    }
+} *@
+@page "/signup"
+@rendermode InteractiveServer
+@using ChairSetting.UI.Models
+@using ChairSetting.UI.Services
+@inject AuthService Auth
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<div class="auth-container">
+    <div class="auth-card">
+        <h3 class="text-center mb-3">Signup</h3>
+
+        <div class="form-group">
+            <input class="form-control"
+                   placeholder="Username"
+                   @bind="model.Username" />
+        </div>
+
+        <div class="form-group mt-2">
+            <input class="form-control"
+                   type="password"
+                   placeholder="Password"
+                   @bind="model.Password" />
+        </div>
+
+        <button class="btn btn-success w-100 mt-3" @onclick="OnSignup">
+            Signup
+        </button>
+
+        <p class="text-center mt-3">
+            Already have an account?
+            <a href="/login">Login</a>
+        </p>
+    </div>
+</div>
+
+@code {
+    SignupDto model = new();
+
+    async Task OnSignup()
+    {
+        await Auth.Signup(model);
+        await JS.InvokeVoidAsync("showToast", "Signup successful. Please login.", "success");
+        Nav.NavigateTo("/login");
+    }
+}

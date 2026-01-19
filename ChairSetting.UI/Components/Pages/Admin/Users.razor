@@ -1,0 +1,184 @@
+﻿@page "/admin/users"
+
+@using ChairSetting.UI.Services
+@using ChairSetting.UI.Models
+@inject UserService UserService
+@inject IJSRuntime JS
+
+<h3 class="mb-3">Manage Users</h3>
+
+<!-- Add User -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h5 class="mb-3">Add User</h5>
+
+        <div class="row g-2">
+            <div class="col-md-4">
+                <input class="form-control"
+                       placeholder="Username"
+                       @bind="newUser.Username" />
+            </div>
+
+            <div class="col-md-4">
+                <input class="form-control"
+                       type="password"
+                       placeholder="Password"
+                       @bind="newUser.Password" />
+            </div>
+
+            <div class="col-md-3">
+                <select class="form-select" @bind="newUser.Role">
+                    <option value="">Select Role</option>
+                    <option value="Admin">Admin</option>
+                    <option value="User">User</option>
+                </select>
+            </div>
+
+            <div class="col-md-1 d-grid">
+                <button class="btn btn-primary" @onclick="AddUser">
+                    <i class="bi bi-plus-circle"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Users Table -->
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Username</th>
+            <th>Role</th>
+            <th style="width:180px">Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var user in users)
+        {
+            <tr>
+                <td>
+                    @if (editUserId == user.Id)
+                    {
+                        <input class="form-control"
+                               @bind="editUser.Username" />
+                    }
+                    else
+                    {
+                        @user.Username
+                    }
+                </td>
+
+                <td>
+                    @if (editUserId == user.Id)
+                    {
+                        <select class="form-select"
+                                @bind="editUser.Role">
+                            <option value="Admin">Admin</option>
+                            <option value="User">User</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">@user.Role</span>
+                    }
+                </td>
+
+                <td>
+                    @if (editUserId == user.Id)
+                    {
+                        <button class="btn btn-sm btn-success me-1"
+                                @onclick="SaveUser">
+                            Save
+                        </button>
+
+                        <button class="btn btn-sm btn-secondary"
+                                @onclick="CancelEdit">
+                            Cancel
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-sm btn-warning me-1"
+                                @onclick="() => EditUser(user)">
+                            Edit
+                        </button>
+
+                        <button class="btn btn-sm btn-danger"
+                                @onclick="() => ConfirmDelete(user.Id)">
+                            Delete
+                        </button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    List<UserDto> users = new();
+
+    CreateUserDto newUser = new();
+    UpdateUserDto editUser = new();
+
+    int? editUserId = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = await UserService.GetAll();
+    }
+
+    async Task AddUser()
+    {
+        if (string.IsNullOrWhiteSpace(newUser.Username) ||
+            string.IsNullOrWhiteSpace(newUser.Password) ||
+            string.IsNullOrWhiteSpace(newUser.Role))
+        {
+            await JS.InvokeVoidAsync("showToast", "All fields required", "warning");
+            return;
+        }
+
+        await UserService.Create(newUser);
+        await JS.InvokeVoidAsync("showToast", "User created", "success");
+
+        newUser = new CreateUserDto();
+        users = await UserService.GetAll();
+    }
+
+    void EditUser(UserDto user)
+    {
+        editUserId = user.Id;
+        editUser = new UpdateUserDto
+        {
+            Username = user.Username,
+            Role = user.Role
+        };
+    }
+
+    async Task SaveUser()
+    {
+        await UserService.Update(editUserId.Value, editUser);
+        await JS.InvokeVoidAsync("showToast", "User updated", "success");
+
+        editUserId = null;
+        users = await UserService.GetAll();
+    }
+
+    void CancelEdit()
+    {
+        editUserId = null;
+    }
+
+    async Task ConfirmDelete(int id)
+    {
+        var confirm = await JS.InvokeAsync<bool>("showConfirmDeleteUser");
+
+        if (!confirm)
+            return;
+
+        await UserService.Delete(id);
+        await JS.InvokeVoidAsync("showToast", "User deleted", "success");
+
+        users = await UserService.GetAll();
+    }
+}

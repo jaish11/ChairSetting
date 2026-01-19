@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36518.9
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChairSetting", "ChairSetting\ChairSetting.csproj", "{92B4E939-8864-4F77-B3F4-26E11542BB80}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChairSetting.UI", "ChairSetting.UI\ChairSetting.UI.csproj", "{F43EDD44-A416-44A6-BD22-14DDE7F1EF39}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{92B4E939-8864-4F77-B3F4-26E11542BB80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92B4E939-8864-4F77-B3F4-26E11542BB80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92B4E939-8864-4F77-B3F4-26E11542BB80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92B4E939-8864-4F77-B3F4-26E11542BB80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F43EDD44-A416-44A6-BD22-14DDE7F1EF39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F43EDD44-A416-44A6-BD22-14DDE7F1EF39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F43EDD44-A416-44A6-BD22-14DDE7F1EF39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F43EDD44-A416-44A6-BD22-14DDE7F1EF39}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AC0649B6-0650-40A3-B820-1F620F3E196D}
+	EndGlobalSection
+EndGlobal

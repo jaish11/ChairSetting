@@ -1,0 +1,22 @@
+﻿@using ChairSetting.UI.Helpers
+@using Microsoft.AspNetCore.Components.Authorization
+@inherits LayoutComponentBase
+@inject AuthenticationStateProvider AuthState
+
+<div class="page">
+    <NavMenu />
+
+    <main class="content px-4">
+        @Body
+    </main>
+</div>
+
+@code {
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender && AuthState is JwtAuthStateProvider jwt)
+        {
+            jwt.MarkJsReady();
+        }
+    }
+}

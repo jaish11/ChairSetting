@@ -1,0 +1,6 @@
+@ChairSetting_HostAddress = http://localhost:5210
+
+GET {{ChairSetting_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

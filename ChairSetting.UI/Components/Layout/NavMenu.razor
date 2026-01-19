@@ -1,0 +1,79 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using ChairSetting.UI.Services
+@inject NavigationManager Nav
+@inject AuthService Auth
+@inject IJSRuntime JS
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+    <a class="navbar-brand fw-bold text-white">Chair System</a>
+
+    <div class="collapse navbar-collapse show">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+            <AuthorizeView>
+                <Authorized>
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="/">
+                            <i class="bi bi-house"></i> Home
+                        </NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="/user/chairs">
+                            <i class="bi bi-chair"></i> My Chairs
+                        </NavLink>
+                    </li>
+
+                    <AuthorizeView Roles="Admin" Context="adminCtx">
+                        <Authorized>
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="/admin/chairs">
+                                    <i class="bi bi-gear"></i> Manage Chairs
+                                </NavLink>
+                            </li>
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="/admin/users">
+                                    <i class="bi bi-people"></i> Users
+                                </NavLink>
+                            </li>
+                        </Authorized>
+                    </AuthorizeView>
+                </Authorized>
+
+                <NotAuthorized>
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="/login">Login</NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="/signup">Signup</NavLink>
+                    </li>
+                </NotAuthorized>
+            </AuthorizeView>
+        
+        </ul>
+
+        <AuthorizeView>
+            <Authorized>
+                <button class="btn btn-outline-light btn-sm" @onclick="Logout">
+                    Logout
+                </button>
+            </Authorized>
+        </AuthorizeView>
+    </div>
+</nav>
+
+
+@code {
+    async Task Logout()
+    {
+        var confirm = await JS.InvokeAsync<bool>("showConfirmLogout");
+        if (!confirm)
+            return;
+
+        await Auth.Logout();
+
+        await JS.InvokeVoidAsync("showToast", "Logged out successfully", "success");
+
+        Nav.NavigateTo("/login");
+    }
+}
+

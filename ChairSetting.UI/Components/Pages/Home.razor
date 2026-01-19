@@ -1,0 +1,86 @@
+﻿@page "/"
+@rendermode InteractiveServer
+
+@using ChairSetting.UI.Services
+@using ChairSetting.UI.Models
+@inject ChairService ChairService
+@inject UserService UserService
+
+<PageTitle>Dashboard</PageTitle>
+
+<h2 class="mb-4">Dashboard</h2>
+
+<div class="row g-4">
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 bg-primary text-white">
+            <div class="card-body text-center">
+                <h6>Total Chairs</h6>
+                <h2>@TotalChairs</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 bg-success text-white">
+            <div class="card-body text-center">
+                <h6>Available Chairs</h6>
+                <h2>@AvailableChairs</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 bg-danger text-white">
+            <div class="card-body text-center">
+                <h6>Occupied Chairs</h6>
+                <h2>@OccupiedChairs</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 bg-dark text-white">
+            <div class="card-body text-center">
+                <h6>Total Users</h6>
+                <h2>@TotalUsers</h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@code {
+    int TotalChairs;
+    int AvailableChairs;
+    int OccupiedChairs;
+    int TotalUsers;
+
+    bool _loaded;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender || _loaded)
+            return;
+
+        _loaded = true;
+
+        try
+        {
+            var chairs = await ChairService.GetAll();
+            var users = await UserService.GetAll();
+
+            TotalChairs = chairs.Count;
+            OccupiedChairs = chairs.Count(c => c.IsOccupied);
+            AvailableChairs = TotalChairs - OccupiedChairs;
+            TotalUsers = users.Count;
+
+            await InvokeAsync(StateHasChanged);
+        }
+        catch
+        {
+            
+        }
+    }
+
+}

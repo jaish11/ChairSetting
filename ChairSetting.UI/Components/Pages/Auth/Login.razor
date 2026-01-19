@@ -1,0 +1,76 @@
+﻿@* @page "/login"
+@using ChairSetting.UI.Models
+@using ChairSetting.UI.Services
+@rendermode InteractiveServer
+@inject AuthService Auth
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<div class="auth-card">
+    <input class="form-control mb-2" placeholder="Username" @bind="model.Username" />
+    <input class="form-control mb-2" type="password" placeholder="Password" @bind="model.Password" />
+
+    <button class="btn btn-primary w-100" @onclick="OnLogin">Login</button>
+</div>
+
+@code {
+    LoginDto model = new();
+
+    async Task OnLogin()
+    {
+        try
+        {
+            await Auth.Login(model);
+            await JS.InvokeVoidAsync("showToast", "Login successful", "success");
+            Nav.NavigateTo("/user/chairs");
+        }
+        catch
+        {
+            await JS.InvokeVoidAsync("showToast", "Invalid login", "error");
+        }
+    }
+} *@
+@page "/login"
+@rendermode InteractiveServer
+@using ChairSetting.UI.Models
+@using ChairSetting.UI.Services
+@inject AuthService Auth
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<div class="auth-container">
+    <div class="auth-card">
+        <h3>Login</h3>
+
+        <input class="form-control mb-3"
+               placeholder="Username"
+               @bind="model.Username" />
+
+        <input class="form-control mb-3"
+               type="password"
+               placeholder="Password"
+               @bind="model.Password" />
+
+        <button class="btn btn-primary w-100" @onclick="OnLogin">
+            Login
+        </button>
+    </div>
+</div>
+
+@code {
+    LoginDto model = new();
+
+    async Task OnLogin()
+    {
+        try
+        {
+            await Auth.Login(model);
+            await JS.InvokeVoidAsync("showToast", "Login successful", "success");
+            Nav.NavigateTo("/user/chairs");
+        }
+        catch
+        {
+            await JS.InvokeVoidAsync("showToast", "Invalid login", "error");
+        }
+    }
+}
