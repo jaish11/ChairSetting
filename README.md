@@ -1,12 +1,12 @@
 # Chair Seating Application
-![Uploading Screenshot (224).png…]()
-![Uploading Screenshot (225).png…]()
-![Uploading Screenshot (226).png…]()
-![Uploading Screenshot (227).png…]()
-![Uploading Screenshot (228).png…]()
-![Uploading Screenshot (229).png…]()
-![Uploading Screenshot (230).png…]()
-![Uploading Screenshot (231).png…]()
+<img width="1920" height="1080" alt="Screenshot (224)" src="https://github.com/user-attachments/assets/c339fd56-095e-4e5f-9e7d-c73aa5e02514" />
+<img width="1920" height="1080" alt="Screenshot (225)" src="https://github.com/user-attachments/assets/04d779e1-b708-402b-8121-6071b0489981" />
+<img width="1920" height="1080" alt="Screenshot (226)" src="https://github.com/user-attachments/assets/216a7ecf-b6d8-484b-99c9-89f8d3024e64" />
+<img width="1920" height="1080" alt="Screenshot (227)" src="https://github.com/user-attachments/assets/b98bafec-1d74-41e3-8b37-59d3edeb027c" />
+<img width="1920" height="1080" alt="Screenshot (228)" src="https://github.com/user-attachments/assets/226d7a51-6e2e-4bf0-8cef-e49b2e297fa6" />
+<img width="1920" height="1080" alt="Screenshot (229)" src="https://github.com/user-attachments/assets/2eb1c6b6-827d-456c-bbce-b141ca4de54a" />
+<img width="1920" height="1080" alt="Screenshot (230)" src="https://github.com/user-attachments/assets/7ec3e051-bf38-4979-96d4-2c59decf4586" />
+<img width="1920" height="1080" alt="Screenshot (231)" src="https://github.com/user-attachments/assets/79afb2e0-e7a1-4d64-8de3-d406641c82b8" />
 
 A full-stack **Chair Seating Management System** built with  
 **ASP.NET Core Web API (.NET 8)** and **Blazor Web App (Server, Interactive)**.
